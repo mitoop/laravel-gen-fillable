@@ -1,0 +1,22 @@
+{
+    "name": "mitoop/laravel-gen-fillable",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "mitoop",
+            "email": "me@mitoop.com"
+        }
+    ],
+    "require": {
+        "laravel/framework": "^6|^7|^8|^9|^10|^11"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.18"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mitoop\\LaravelGenFillable\\": "src/"
+        }
+    }
+}
