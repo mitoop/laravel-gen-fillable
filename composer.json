@@ -18,5 +18,10 @@
         "psr-4": {
             "Mitoop\\LaravelGenFillable\\": "src/"
         }
+    },
+    "extra": {
+        "laravel": {
+            "providers": ["Mitoop\\LaravelGenFillable\\ServiceProvider"]
+        }
     }
 }
