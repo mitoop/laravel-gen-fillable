@@ -1,1 +1,1 @@
-# laravel-gen-fillable-
+# Gen Fillable
