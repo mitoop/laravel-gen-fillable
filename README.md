@@ -3,7 +3,7 @@ Generate fillable array for a table.
 
 ## Install
 ```shell
-composer require composer require mitoop/laravel-gen-fillable
+composer require mitoop/laravel-gen-fillable
 ```
 
 ## Require
