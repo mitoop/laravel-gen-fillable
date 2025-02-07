@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class GenerateFillable extends Command
 {
-    protected $signature = 'ace:gen-fillable 
+    protected $signature = 'db:fillable 
                             {table : The table name} 
                             {connection? : The database connection name}';
 

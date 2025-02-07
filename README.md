@@ -10,4 +10,4 @@ composer require mitoop/laravel-gen-fillable
 - Laravel ^6|^7|^8|^9|^10|^11
 
 ## Use
-`php artisan ace:gen-fillable {table}`
+`php artisan db:fillable {table}`
