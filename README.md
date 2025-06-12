@@ -7,7 +7,7 @@ composer require mitoop/laravel-gen-fillable
 ```
 
 ## Require
-- Laravel ^6|^7|^8|^9|^10|^11
+- Laravel ^6|^7|^8|^9|^10|^11|^12
 
 ## Use
 `php artisan db:fillable {table}`
