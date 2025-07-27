@@ -11,5 +11,7 @@ composer require mitoop/laravel-gen-fillable
 
 ## Use
 `php artisan gen:model {model}`
+
 `php artisan gen:fillable {model}`
+
 `php artisan gen:fillable-table {table}`
