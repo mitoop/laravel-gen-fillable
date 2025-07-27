@@ -1,5 +1,5 @@
 # Gen Fillable
-Generate fillable array for a table.
+Generate fillable array for a model.
 
 ## Install
 ```shell
@@ -10,4 +10,6 @@ composer require mitoop/laravel-gen-fillable
 - Laravel ^6|^7|^8|^9|^10|^11|^12
 
 ## Use
-`php artisan db:fillable {table}`
+`php artisan gen:model {model}`
+`php artisan gen:fillable {model}`
+`php artisan gen:fillable-table {table}`
