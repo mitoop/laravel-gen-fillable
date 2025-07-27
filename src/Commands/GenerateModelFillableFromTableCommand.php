@@ -7,7 +7,7 @@ use Illuminate\Database\Schema\Grammars\MySqlGrammar;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 
-class GenerateModelFillableFromTable extends Command
+class GenerateModelFillableFromTableCommand extends Command
 {
     protected $signature = 'gen:fillable-table
                             {table : The table name} 

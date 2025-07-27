@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\Schema;
 use ReflectionClass;
 
-class GenerateModelFillable extends Command
+class GenerateModelFillableCommand extends Command
 {
     protected $signature = 'gen:fillable {model : The model class name (e.g. User)}';
 

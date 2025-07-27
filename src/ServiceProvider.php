@@ -3,8 +3,9 @@
 namespace Mitoop\LaravelGenFillable;
 
 use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
-use Mitoop\LaravelGenFillable\Commands\GenerateModelFillable;
-use Mitoop\LaravelGenFillable\Commands\GenerateModelFillableFromTable;
+use Mitoop\LaravelGenFillable\Commands\GenerateModelCommand;
+use Mitoop\LaravelGenFillable\Commands\GenerateModelFillableCommand;
+use Mitoop\LaravelGenFillable\Commands\GenerateModelFillableFromTableCommand;
 
 class ServiceProvider extends LaravelServiceProvider
 {
@@ -12,8 +13,9 @@ class ServiceProvider extends LaravelServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->commands([
-                GenerateModelFillable::class,
-                GenerateModelFillableFromTable::class,
+                GenerateModelCommand::class,
+                GenerateModelFillableCommand::class,
+                GenerateModelFillableFromTableCommand::class,
             ]);
         }
     }
