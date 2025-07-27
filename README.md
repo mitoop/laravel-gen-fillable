@@ -10,7 +10,7 @@ composer require --dev mitoop/laravel-gen-fillable
 - Laravel ^6|^7|^8|^9|^10|^11|^12
 
 ## Use
-`php artisan gen:model {model}`
+`php artisan gen:model {model/table}`
 
 `php artisan gen:fillable {model}`
 
