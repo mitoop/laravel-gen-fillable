@@ -17,7 +17,7 @@ class GenerateModelCommand extends Command
 
         $this->call('make:model', ['name' => $model]);
 
-        $this->call('gen:fillable', ['model' => $model]);
+        $this->call('gen:fillable', ['name' => $model]);
     }
 
     protected function resolveModelName(string $name): string

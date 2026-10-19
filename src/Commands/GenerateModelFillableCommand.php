@@ -3,20 +3,39 @@
 namespace Mitoop\LaravelGenFillable\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Database\Schema\Grammars\MySqlGrammar;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\Schema;
+use Mitoop\LaravelGenFillable\FillableWriter;
 use ReflectionClass;
 
 class GenerateModelFillableCommand extends Command
 {
-    protected $signature = 'gen:fillable {model : The model class name (e.g. User)}';
+    protected $signature = 'gen:fillable {name : Model class name (e.g. User) or table name (e.g. users)}';
 
-    protected $description = 'Generate fillable array and insert into model file';
+    protected $description = 'Generate fillable for a model or table';
 
     public function handle(): void
     {
-        $model = $this->argument('model');
+        $name = $this->argument('name');
 
+        if ($this->isModel($name)) {
+            $this->generateForModel($name);
+
+            return;
+        }
+
+        $this->generateForTable($name);
+    }
+
+    protected function isModel(string $name): bool
+    {
+        return preg_match('/^[A-Z]/', $name) === 1;
+    }
+
+    protected function generateForModel(string $model): void
+    {
         $fullModel = $this->resolveFullModelName($model);
 
         if (! class_exists($fullModel)) {
@@ -32,37 +51,55 @@ class GenerateModelFillableCommand extends Command
         $columns = Schema::connection($connection)->getColumnListing($table);
         $columns = array_diff($columns, ['id', 'created_at', 'updated_at', 'deleted_at']);
 
-        $fillableArray = "protected \$fillable = [\n    '".implode("',\n    '", $columns)."'\n];";
-
         $file = with(new ReflectionClass($fullModel))->getFileName();
         $fileContent = file_get_contents($file);
 
-        if (str_contains($fileContent, 'protected $fillable')) {
-            $this->warn('The model already has a $fillable property.');
+        if ($message = FillableWriter::alreadyDefined($fileContent)) {
+            $this->warn($message);
 
             return;
         }
 
-        file_put_contents($file, $this->injectFillable($fileContent, $fillableArray));
+        file_put_contents($file, FillableWriter::insert($fileContent, $columns));
 
         Process::run("./vendor/bin/pint {$file}");
 
-        $this->info("Inserted \$fillable into: {$file}");
+        $this->info(FillableWriter::usesAttribute()
+            ? "Inserted #[Fillable] into: {$file}"
+            : "Inserted \$fillable into: {$file}");
     }
 
-    protected function injectFillable(string $content, string $fillable): string
+    protected function generateForTable(string $table): void
     {
-        return preg_replace_callback(
-            '/(class\s+\w+\s+[^{]*\{)(\s*(?:use\s+[^;]+;\s*)*)/m',
-            function ($matches) use ($fillable) {
-                $classStart = $matches[1];
-                $useBlock = $matches[2];
+        $db = DB::connection();
 
-                return $classStart.$useBlock."\n\n    ".$fillable."\n";
-            },
-            $content,
-            1
-        );
+        if ($db->getDriverName() === 'mysql'
+            &&
+            version_compare($this->getLaravel()->version(), '10.30.0', '<')) {
+            $grammar = new class extends MySqlGrammar
+            {
+                public function compileColumnListing()
+                {
+                    return parent::compileColumnListing().' ORDER BY ordinal_position';
+                }
+            };
+
+            $db->setSchemaGrammar($grammar);
+
+            $db->withTablePrefix($grammar);
+        }
+
+        $columns = $db->getSchemaBuilder()->getColumnListing($table);
+        $columns = array_diff($columns, ['id', 'created_at', 'updated_at', 'deleted_at']);
+
+        $fillable = FillableWriter::clipboard($columns);
+
+        $this->info($fillable);
+
+        if (PHP_OS === 'Darwin') {
+            exec('echo '.escapeshellarg($fillable).' | pbcopy');
+            $this->info('The fillable array has been copied to your clipboard.');
+        }
     }
 
     protected function resolveFullModelName(string $class): string
